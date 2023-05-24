@@ -10,7 +10,6 @@ const PomodoroTimer = () => {
     const [isRunning, setIsRunning] = useState(false)
     const [showReset, setShowReset] = useState(false)
     const [timeExpired, setTimeExpired] = useState(false)
-    const [selectedTime, setSelectedTime] = useState(25)
 
     // useEffect(() => {
     //     if (Notification.permission !== 'granted') {
@@ -34,12 +33,11 @@ const PomodoroTimer = () => {
                     clearInterval(interval);
                     setTimeExpired(true);
                     showNotification();
-                    setSelectedTime();
                 }
             }, 1000);
             return () => clearInterval(interval);
         }
-    }, [isRunning, selectedTime, minutes, seconds]);
+    }, [isRunning, minutes, seconds]);
 
     const showNotification = () => {
         if (Notification.permission === 'granted') {
@@ -61,7 +59,6 @@ const PomodoroTimer = () => {
     }
 
     const resetTimer = () => {
-        setMinutes(selectedTime)
         setSeconds(0)
         setIsRunning(false)
         setShowReset(false)
@@ -69,28 +66,49 @@ const PomodoroTimer = () => {
 
     const handleTimeChange = event => {
         const selectedMinutes = parseInt(event.target.value)
-        setSelectedTime(selectedMinutes)
+        setMinutes(selectedMinutes)
     }
 
     const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds
         .toString()
         .padStart(2, '0')}`
 
+    const [isHovered, setIsHovered] = useState(false);
+
+    const handleMouseEnter = () => {
+        setIsHovered(true);
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+    };
+
+    const clockEmojiStyle = isHovered ? 'translate-y-2' : 'translate-y-0';
+
+
     return (
         <div className='flex flex-col min-h-screen'>
             <div className='flex-grow'>
                 <div className='flex flex-col items-center justify-center h-screen bg-background1'>
+                    <h1 className="mb-4 text-6xl font-semibold text-center text-white">
+                        <span
+                            className={`${clockEmojiStyle}`}
+                            onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
+                        >
+                            ⏰
+                        </span>{' '}
+                        Timer
+                    </h1>
                     <div className='bg-white bg-opacity-5  rounded-lg shadow-lg p-8 min-h-[50%] min-w-[30%] flex align-middle flex-col justify-center backdrop-filter backdrop-blur-lg backdrop-saturate-150'>
-                        <h1 className='text-6xl text-center text-white mb-4 font-semibold'>
-                            ⏰ Timer
-                        </h1>
+
                         <div className='flex items-center justify-center mb-8'>
                             {isRunning ? (
-                                <p className='text-6xl font-bold  border-none outline-none appearance-none text-white'>{formattedTime}</p>
+                                <p className='text-8xl font-bold text-white border-none outline-none appearance-none'>{formattedTime}</p>
                             ) : (
                                 <select
-                                    className="text-white bg-background1  text-6xl font-bold border-none outline-none appearance-none p-2 shadow-inner rounded-lg backdrop-filter backdrop-blur-lg backdrop-saturate-150 "
-                                    value={selectedTime}
+                                    className="p-2 text-8xl font-bold text-white border-none rounded-lg shadow-inner outline-none appearance-none bg-background1 backdrop-filter backdrop-blur-lg backdrop-saturate-150 "
+                                    value={minutes}
                                     onChange={handleTimeChange}
 
                                 >
@@ -106,14 +124,14 @@ const PomodoroTimer = () => {
                         <div className='flex items-center justify-center space-x-4'>
                             {!isRunning ? (
                                 <button
-                                    className='py-2 px-4 rounded bg-gray-300 hover:bg-gray-400 text-white shadow-lg bg-opacity-40 backdrop-filter backdrop-blur-lg backdrop-saturate-150'
+                                    className='text-3xl px-4 py-2 text-white bg-gray-300 rounded shadow-lg hover:bg-gray-400 bg-opacity-40 backdrop-filter backdrop-blur-lg backdrop-saturate-150'
                                     onClick={startTimer}
                                 >
                                     Start
                                 </button>
                             ) : (
                                 <button
-                                    className='py-2 px-4 rounded bg-gray-300 hover:bg-gray-400 text-white shadow-lg bg-opacity-40 backdrop-filter backdrop-blur-lg backdrop-saturate-150'
+                                    className='text-3xl  px-4 py-2 text-white bg-gray-300 rounded shadow-lg hover:bg-gray-400 bg-opacity-40 backdrop-filter backdrop-blur-lg backdrop-saturate-150'
                                     onClick={pauseTimer}
                                 >
                                     Pause
@@ -121,7 +139,7 @@ const PomodoroTimer = () => {
                             )}
                             {showReset && (
                                 <button
-                                    className='py-2 px-4 rounded bg-gray-300 hover:bg-gray-400 text-white shadow-lg bg-opacity-40 backdrop-filter backdrop-blur-lg backdrop-saturate-150'
+                                    className='text-3xl  px-4 py-2 text-white bg-gray-300 rounded shadow-lg hover:bg-gray-400 bg-opacity-40 backdrop-filter backdrop-blur-lg backdrop-saturate-150'
                                     onClick={resetTimer}
                                 >
                                     Reset
@@ -131,11 +149,11 @@ const PomodoroTimer = () => {
                     </div>
                 </div>
             </div>
-            <footer className='bg-white bg-opacity-10 backdrop-blur-lg py-8 absolute bottom-0 w-full'>
-                <div className='container mx-auto px-4'>
-                    <div className='flex flex-col md:flex-row items-center justify-between'>
-                        <div className='text-white text-center md:text-left mb-4 md:mb-0 flex items-center justify-center'>
-                            <span className='text-md font-normal'>
+            <footer className='absolute bottom-0 w-full py-8 bg-white bg-opacity-10 backdrop-blur-lg'>
+                <div className='container px-4 mx-auto'>
+                    <div className='flex flex-col items-center justify-between md:flex-row'>
+                        <div className='flex items-center justify-center mb-4 text-center text-white md:text-left md:mb-0'>
+                            <span className='font-normal text-md'>
                                 developed with 💜 by codewithxavi{' '}
                             </span>
                             &nbsp;
@@ -183,7 +201,7 @@ const PomodoroTimer = () => {
                                 href='https://github.com/codewithxavi'
                                 target='_blank'
                                 rel='noopener noreferrer'
-                                className='text-white hover:text-gray-300 transition-colors duration-300'
+                                className='text-white transition-colors duration-300 hover:text-gray-300'
                             >
                                 <GithubIcon />
                             </a>
@@ -191,7 +209,7 @@ const PomodoroTimer = () => {
                                 href='https://www.linkedin.com/in/codewithxavi/'
                                 target='_blank'
                                 rel='noopener noreferrer'
-                                className='text-white hover:text-gray-300 transition-colors duration-300'
+                                className='text-white transition-colors duration-300 hover:text-gray-300'
                             >
                                 <LinkedinIcon />
                             </a>
@@ -199,7 +217,7 @@ const PomodoroTimer = () => {
                                 href='https://www.youtube.com/@codewithxavi'
                                 target='_blank'
                                 rel='noopener noreferrer'
-                                className='text-white hover:text-gray-300 transition-colors duration-300'
+                                className='text-white transition-colors duration-300 hover:text-gray-300'
                             >
                                 <YoutubeIcon />
                             </a>
