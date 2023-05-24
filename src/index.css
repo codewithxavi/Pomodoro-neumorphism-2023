@@ -5,14 +5,15 @@
 @tailwind utilities;
 
 @font-face {
-    font-family: 'dmbold';
-    src: url('fonts/DMSans-Bold.ttf') format('truetype');
-    font-weight: bold;
-    font-style: bold;
- }
- @font-face {
-    font-family: 'dmregular';
-    src: url('fonts/DMSans-BoldItalic.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
- }
+   font-family: 'dmbold';
+   src: url('fonts/DMSans-Bold.ttf') format('truetype');
+   font-weight: bold;
+   font-style: bold;
+}
+
+@font-face {
+   font-family: 'dmregular';
+   src: url('fonts/DMSans-BoldItalic.ttf') format('truetype');
+   font-weight: normal;
+   font-style: normal;
+}
