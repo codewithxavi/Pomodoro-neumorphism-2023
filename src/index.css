@@ -14,3 +14,16 @@ body {
 }
 
 
+.neumorphism {
+   border-radius: 50px;
+   background: #1f1f1f;
+   box-shadow: -9px -9px 18px #292727,
+      9px 9px 18px #302d2d;
+}
+
+.neumorphism2 {
+   border-radius: 50px;
+   background: #1f1f1f;
+   box-shadow: 9px 9px 18px #1a1818,
+   -9px -9px 18px #292727;
+}

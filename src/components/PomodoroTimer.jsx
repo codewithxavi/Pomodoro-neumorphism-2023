@@ -94,38 +94,34 @@ const PomodoroTimer = () => {
                         Timer
                         <span class="group-hover:translate-y-20 inline-block transition-transform animate-pulse pt-5">⏰</span>
                     </h1>
-                    <div className='bg-white bg-opacity-5  rounded-lg shadow-lg p-8 min-h-[50%] min-w-[30%] flex align-middle flex-col justify-center backdrop-filter backdrop-blur-lg backdrop-saturate-150'>
-
-                        <div className='flex items-center justify-center mb-8'>
+                    <div className="bg-white rounded-lg shadow-lg p-8 min-h-[50%] min-w-[30%] flex align-middle flex-col justify-center bg-opacity-5 backdrop-filter backdrop-blur-lg backdrop-saturate-150 neumorphism2">
+                        <div className="flex items-center justify-center mb-8">
                             {isRunning ? (
-                                <p className='text-8xl font-bold text-white border-none outline-none appearance-none'>{formattedTime}</p>
+                                <p className="neumorphism text-8xl font-bold text-white border-none outline-none appearance-none">{formattedTime}</p>
                             ) : (
                                 <select
-                                    className="p-2 text-8xl font-bold text-white border-none rounded-lg shadow-inner outline-none appearance-none bg-background1 backdrop-filter backdrop-blur-lg backdrop-saturate-150 "
+                                    className=" neumorphism p-2 text-8xl font-bold text-white border-none rounded-lg shadow-inner outline-none appearance-none bg-background1 backdrop-filter backdrop-blur-lg backdrop-saturate-150"
                                     value={minutes}
                                     onChange={handleTimeChange}
-
                                 >
                                     <option value={10}>10:00</option>
                                     <option value={25}>25:00</option>
                                     <option value={40}>40:00</option>
                                     <option value={55}>55:00</option>
                                 </select>
-
-
                             )}
                         </div>
-                        <div className='flex items-center justify-center space-x-4'>
+                        <div className="flex items-center justify-center space-x-4">
                             {!isRunning ? (
                                 <button
-                                    className='text-3xl px-4 py-2 text-white bg-gray-300 rounded shadow-lg hover:bg-gray-400 bg-opacity-40 backdrop-filter backdrop-blur-lg backdrop-saturate-150'
+                                    className="neumorphism text-3xl px-4 py-2 text-white bg-gray-300 rounded shadow-lg hover:bg-gray-400 bg-opacity-40 backdrop-filter backdrop-blur-lg backdrop-saturate-150"
                                     onClick={startTimer}
                                 >
                                     Start
                                 </button>
                             ) : (
                                 <button
-                                    className='text-3xl  px-4 py-2 text-white bg-gray-300 rounded shadow-lg hover:bg-gray-400 bg-opacity-40 backdrop-filter backdrop-blur-lg backdrop-saturate-150'
+                                    className="neumorphism text-3xl px-4 py-2 text-white bg-gray-300 rounded shadow-lg hover:bg-gray-400 bg-opacity-40 backdrop-filter backdrop-blur-lg backdrop-saturate-150"
                                     onClick={pauseTimer}
                                 >
                                     Pause
@@ -133,7 +129,7 @@ const PomodoroTimer = () => {
                             )}
                             {showReset && (
                                 <button
-                                    className='text-3xl  px-4 py-2 text-white bg-gray-300 rounded shadow-lg hover:bg-gray-400 bg-opacity-40 backdrop-filter backdrop-blur-lg backdrop-saturate-150'
+                                    className="neumorphism text-3xl px-4 py-2 text-white bg-gray-300 rounded shadow-lg hover:bg-gray-400 bg-opacity-40 backdrop-filter backdrop-blur-lg backdrop-saturate-150"
                                     onClick={resetTimer}
                                 >
                                     Reset
@@ -141,9 +137,11 @@ const PomodoroTimer = () => {
                             )}
                         </div>
                     </div>
+
+
                 </div>
             </div>
-            <footer className='absolute bottom-0 w-full py-8 bg-white bg-opacity-10 backdrop-blur-lg'>
+            <footer className='absolute bottom-0 w-full py-8 bg-white bg-opacity-10 backdrop-blur-lg b shadow-lg'>
                 <div className='container px-4 mx-auto'>
                     <div className='flex flex-col items-center justify-between md:flex-row'>
                         <div className='flex items-center justify-center mb-4 text-center text-white md:text-left md:mb-0'>
