@@ -157,6 +157,7 @@ const PomodoroTimer = () => {
                                 target='_blank'
                                 rel='noopener noreferrer'
                                 className='text-white transition-colors duration-300 hover:text-gray-300'
+                                aria-label='Github'
                             >
                                 <GithubIcon />
                             </a>
@@ -165,6 +166,7 @@ const PomodoroTimer = () => {
                                 target='_blank'
                                 rel='noopener noreferrer'
                                 className='text-white transition-colors duration-300 hover:text-gray-300'
+                                aria-label='Linkedin'
                             >
                                 <LinkedinIcon />
                             </a>
@@ -173,6 +175,7 @@ const PomodoroTimer = () => {
                                 target='_blank'
                                 rel='noopener noreferrer'
                                 className='text-white transition-colors duration-300 hover:text-gray-300'
+                                aria-label='youtube'
                             >
                                 <YoutubeIcon />
                             </a>
