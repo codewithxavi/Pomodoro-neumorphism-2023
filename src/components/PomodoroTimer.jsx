@@ -90,7 +90,7 @@ const PomodoroTimer = () => {
         <div className='flex flex-col min-h-screen'>
             <div className='flex-grow'>
                 <div className='flex flex-col items-center justify-center h-screen bg-background1'>
-                    <h1 class="text-6xl font-semibold w-fit h-fit text-center text-white pb-1 group overflow-hidden">
+                    <h1 class="text-6xl font-semibold w-fit h-fit text-center text-white pb-1 group overflow-hidden bottom-5 relative">
                         Timer
                         <span class="group-hover:translate-y-20 inline-block transition-transform animate-pulse pt-5">⏰</span>
                     </h1>
@@ -141,7 +141,7 @@ const PomodoroTimer = () => {
 
                 </div>
             </div>
-            <footer className='absolute bottom-0 w-full py-8 bg-white bg-opacity-10 backdrop-blur-lg b shadow-lg'>
+            <footer className='absolute bottom-0 w-full py-5 bg-white bg-opacity-10 backdrop-blur-lg b shadow-lg'>
                 <div className='container px-4 mx-auto'>
                     <div className='flex flex-col items-center justify-between md:flex-row'>
                         <div className='flex items-center justify-center mb-4 text-center text-white md:text-left md:mb-0'>
