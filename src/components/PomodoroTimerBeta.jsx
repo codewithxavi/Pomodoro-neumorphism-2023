@@ -178,8 +178,8 @@ const PomodoroTimerBeta = () => {
             <footer className='absolute bottom-0 w-full py-5 bg-white bg-opacity-10 backdrop-blur-lg shadow-lg'>
                 <div className=' px-4 mx-auto container'> 
                     <div className='flex flex-col items-center justify-center md:flex-row'>
-                        <div className='flex items-center justify-center mb-4 text-center text-white md:text-left md:mb-0'>
-                            <span className='font-normal text-md mr-20'>
+                        <div className='flex items-center justify-center mb-4 text-center text-white md:text-left md:mb-0 md:gap-x-20'>
+                            <span className='font-normal text-md'>
                                 developed with 💜 by codewithxavi{' '}  <span className='text-white'> &copy; {new Date().getFullYear()}</span>
                             </span>
                             &nbsp;
