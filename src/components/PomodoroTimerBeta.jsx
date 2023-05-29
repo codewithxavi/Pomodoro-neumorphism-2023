@@ -116,7 +116,7 @@ const PomodoroTimerBeta = () => {
                 <div className='flex flex-col items-center justify-center h-screen bg-background1'>
                     <h1 className="text-6xl font-semibold w-fit h-fit text-center text-white pb-5 group overflow-hidden bottom-5 relative">
                         Timer
-                        <span className="group-hover:translate-y-20 inline-block transition-transform animate-pulse pt-3">⏰</span>
+                        <span className="group-hover:translate-y-28 inline-block transition-transform animate-pulse pt-3">⏰</span>
                     </h1>
                     <div className="bg-white rounded-lg shadow-lg p-8 min-h-[50%] min-w-[30%] flex align-middle flex-col justify-center bg-opacity-5 backdrop-filter backdrop-blur-lg backdrop-saturate-150 neumorphism2">
                         <div className="flex items-center justify-center mb- text-white flex-col ">
