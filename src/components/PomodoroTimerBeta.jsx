@@ -4,67 +4,112 @@ import LinkedinIcon from './LinkedinIcon'
 import YoutubeIcon from './YoutubeIcon'
 
 
-const PomodoroTimer = () => {
-    const [minutes, setMinutes] = useState(25)
-    const [seconds, setSeconds] = useState(0)
-    const [isRunning, setIsRunning] = useState(false)
-    const [showReset, setShowReset] = useState(false)
-    const [timeExpired, setTimeExpired] = useState(false)
+const PomodoroTimerBeta = () => {
 
-    useEffect(() => {
-        if (!isRunning) return
-        //if (isRunning) {
-        const interval = setInterval(() => {
-            if (seconds > 0) {
-                setSeconds(prevSeconds => prevSeconds - 1);
-            } else if (minutes > 0) {
-                setMinutes(prevMinutes => prevMinutes - 1);
-                setSeconds(59);
-            } else {
-                clearInterval(interval);
-                setTimeExpired(true);
-                showNotification();
-            }
-        }, 1000);
-        return () => clearInterval(interval);
-        //}
-    }, [isRunning, minutes, seconds]);
+    const [pause, setPause] = useState(false);
+    const [start, setStart] = useState(false);
+    const [time, setTime] = useState({
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+    });
 
-    const showNotification = () => {
-        if (Notification.permission === 'granted') {
-            new Notification('Timer Expired', {
-                body: 'The timer has reached 0.',
-            });
+    const [canStart, setCanStart] = useState(false);
+    const [countdown, setCountdown] = useState(null);
+
+
+    const handleStart = () => {
+        // Verificar que las horas sean mayores a cero
+        if (time.hours < 0) {
+            alert("Please enter a valid value for hours");
+            return;
         }
+
+        // Verificar que los minutos y segundos estén en el rango válido
+        if (time.minutes < 0 || time.minutes > 59 || isNaN(time.minutes)) {
+            alert("Please enter a valid value for minutes");
+            return;
+        }
+
+        if (time.seconds < 0 || time.seconds > 59 || isNaN(time.seconds)) {
+            alert("Please enter a valid value for seconds");
+            return;
+        }
+
+        // Verificar que todos los campos sean diferentes de cero
+        if (time.hours === 0 && time.minutes === 0 && time.seconds === 0) {
+            alert("Error: All values are 0. Please enter a valid time");
+            return;
+        }
+
+        // La lógica de los inputs es correcta, se puede iniciar el conteo
+        const totalSeconds = time.hours * 3600 + time.minutes * 60 + time.seconds;
+        setCountdown(totalSeconds);
+        setCanStart(true);
+
+        // La lógica de los inputs es correcta, se puede iniciar el conteo
+        setCanStart(true);
     };
 
-    const startTimer = () => {
-        setIsRunning(true)
-        setShowReset(true)
+    useEffect(() => {
+  if (canStart && countdown > 0) {
+    const interval = setInterval(() => {
+      setCountdown((prevCountdown) => prevCountdown - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  } else if (canStart && countdown === 0) {
+    // Countdown has reached 0
+    setCanStart(false);
+    alert("Time is up!");
+
+    if ("Notification" in window) {
+      if (Notification.permission === "granted") {
+        // Show system-level notification
+        showNotification();
+      } else if (Notification.permission !== "denied") {
+        // Request permission to show notifications
+        Notification.requestPermission().then((permission) => {
+          if (permission === "granted") {
+            // Show system-level notification
+            showNotification();
+          }
+        });
+      }
     }
+  }
+}, [canStart, countdown]);
 
-    const pauseTimer = () => {
-        setIsRunning(false)
-        setShowReset(true)
-    }
-
-    const resetTimer = () => {
-        setSeconds(0)
-        setIsRunning(false)
-        setShowReset(false)
-    }
-
-    const handleTimeChange = event => {
-        const selectedMinutes = parseInt(event.target.value)
-        setMinutes(selectedMinutes)
-    }
-
-    const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds
-        .toString()
-        .padStart(2, '0')}`
+const showNotification = () => {
+  new Notification("Time is up!", {
+    body: "The countdown has finished.",
+    icon: "path_to_notification_icon.png",
+  });
+};
 
 
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setTime((prevState) => ({
+            ...prevState,
+            [name]: parseInt(value, 10),
+        }));
+    };
+
+
+    const totalSeconds = time.hours * 3600 + time.minutes * 60 + time.seconds;
+
+    const formatTime = (totalSeconds) => {
+        const hours = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
+        const minutes = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+        const seconds = (totalSeconds % 60).toString().padStart(2, '0');
+
+        return `${hours}:${minutes}:${seconds}`;
+    };
+
+
+    const formattedTime = formatTime(totalSeconds);
 
 
     return (
@@ -76,60 +121,55 @@ const PomodoroTimer = () => {
                         <span className="group-hover:translate-y-20 inline-block transition-transform animate-pulse pt-5">⏰</span>
                     </h1>
                     <div className="bg-white rounded-lg shadow-lg p-8 min-h-[50%] min-w-[30%] flex align-middle flex-col justify-center bg-opacity-5 backdrop-filter backdrop-blur-lg backdrop-saturate-150 neumorphism2">
-                        <div className="flex items-center justify-center mb-8">
-                            {isRunning ? (
-                                <p className="neumorphism text-8xl font-bold text-white border-none outline-none appearance-none">{formattedTime}</p>
-                            ) : (
+                        <div className="flex items-center justify-center mb-8 text-white">
 
-                                // <select
-                                //     className=" neumorphism p-2 text-8xl font-bold text-white border-none rounded-lg shadow-inner outline-none appearance-none bg-background1 backdrop-filter backdrop-blur-lg backdrop-saturate-150"
-                                //     value={minutes}
-                                //     onChange={handleTimeChange}
-                                // >
-                                //     <option value={10}>10:00</option>
-                                //     <option value={25}>25:00</option>
-                                //     <option value={40}>40:00</option>
-                                //     <option value={55}>55:00</option>
-                                // </select>
-                                <>
-                                    <input className="neumorphism text-2xl font-bold text-white border-none outline-none appearance-none" type="number" name="hours" id="hours" />
-                                    <input className="neumorphism text-2xl font-bold text-white border-none outline-none appearance-none" type="number" name="minutes" id="minutes" />
-                                    <input className="neumorphism text-2xl font-bold text-white border-none outline-none appearance-none" type="number" name="seconds" id="seconds" />
-                                </>
+                            <>
+                                {!canStart ? (
+                                    <div>
+                                        <label>
+                                            H
+                                            <input
+                                                type="number"
+                                                name="hours"
+                                                value={time.hours}
+                                                onChange={handleChange}
+                                                className='text-background1 text-center w-10 focus:outline-none'
+                                            />
+                                        </label>
+                                        <label>
+                                            M
+                                            <input
+                                                type="number"
+                                                name="minutes"
+                                                value={time.minutes}
+                                                onChange={handleChange}
+                                                className='text-background1 text-center w-10 focus:outline-none'
+                                            />
+                                        </label>
+                                        <label>
+                                            S
+                                            <input
+                                                type="number"
+                                                name="seconds"
+                                                value={time.seconds}
+                                                onChange={handleChange}
+                                                className='text-background1 text-center w-10 focus:outline-none'
+                                            />
+                                        </label> <br />
+                                        <button className='w-full mt-2 mx-auto text-center rounded-lg bg-gray-100 border p-2 shadow-md hover:shadow-lg focus:outline-none focus:ring focus:border-bermuda' onClick={handleStart}>Start</button>
 
 
+                                    </div>
+                                ) : (
+                                    <div>
+                                        {/* Aquí puedes mostrar el conteo regresivo */}
+                                        <p>Countdown in progress: {formatTime(countdown)}</p>
+                                    </div>
+                                )}
+                            </>
 
-
-                            )}
-                        </div>
-                        <div className="flex items-center justify-center space-x-4">
-                            {!isRunning ? (
-                                <button
-                                    className="neumorphism text-3xl px-4 py-2 text-white bg-gray-300 rounded shadow-lg hover:bg-gray-400 bg-opacity-40 backdrop-filter backdrop-blur-lg backdrop-saturate-150"
-                                    onClick={startTimer}
-                                >
-                                    Start
-                                </button>
-                            ) : (
-                                <button
-                                    className="neumorphism text-3xl px-4 py-2 text-white bg-gray-300 rounded shadow-lg hover:bg-gray-400 bg-opacity-40 backdrop-filter backdrop-blur-lg backdrop-saturate-150"
-                                    onClick={pauseTimer}
-                                >
-                                    Pause
-                                </button>
-                            )}
-                            {showReset && (
-                                <button
-                                    className="neumorphism text-3xl px-4 py-2 text-white bg-gray-300 rounded shadow-lg hover:bg-gray-400 bg-opacity-40 backdrop-filter backdrop-blur-lg backdrop-saturate-150"
-                                    onClick={resetTimer}
-                                >
-                                    Reset
-                                </button>
-                            )}
                         </div>
                     </div>
-
-
                 </div>
             </div>
             <footer className='absolute bottom-0 w-full py-5 bg-white bg-opacity-10 backdrop-blur-lg b shadow-lg'>
@@ -216,4 +256,4 @@ const PomodoroTimer = () => {
     )
 }
 
-export default PomodoroTimer
+export default PomodoroTimerBeta
