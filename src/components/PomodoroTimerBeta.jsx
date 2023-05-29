@@ -3,11 +3,8 @@ import GithubIcon from './GithubIcon'
 import LinkedinIcon from './LinkedinIcon'
 import YoutubeIcon from './YoutubeIcon'
 
-
 const PomodoroTimerBeta = () => {
 
-    const [pause, setPause] = useState(false);
-    const [start, setStart] = useState(false);
     const [time, setTime] = useState({
         hours: 0,
         minutes: 0,
@@ -17,77 +14,85 @@ const PomodoroTimerBeta = () => {
     const [canStart, setCanStart] = useState(false);
     const [countdown, setCountdown] = useState(null);
 
-
     const handleStart = () => {
-        // Verificar que las horas sean mayores a cero
+        // Validate hours
         if (time.hours < 0) {
             alert("Please enter a valid value for hours");
             return;
         }
-
-        // Verificar que los minutos y segundos estén en el rango válido
+        // Validate minutes
         if (time.minutes < 0 || time.minutes > 59 || isNaN(time.minutes)) {
             alert("Please enter a valid value for minutes");
             return;
         }
-
+        // Validate seconds
         if (time.seconds < 0 || time.seconds > 59 || isNaN(time.seconds)) {
             alert("Please enter a valid value for seconds");
             return;
         }
 
-        // Verificar que todos los campos sean diferentes de cero
+        // Validate 0
         if (time.hours === 0 && time.minutes === 0 && time.seconds === 0) {
             alert("Error: All values are 0. Please enter a valid time");
             return;
         }
 
-        // La lógica de los inputs es correcta, se puede iniciar el conteo
         const totalSeconds = time.hours * 3600 + time.minutes * 60 + time.seconds;
         setCountdown(totalSeconds);
         setCanStart(true);
+    };
 
-        // La lógica de los inputs es correcta, se puede iniciar el conteo
-        setCanStart(true);
+    const resetInputValues = () => {
+        // Reset input values to 0
+        setTime({
+            hours: 0,
+            minutes: 0,
+            seconds: 0
+        });
     };
 
     useEffect(() => {
-  if (canStart && countdown > 0) {
-    const interval = setInterval(() => {
-      setCountdown((prevCountdown) => prevCountdown - 1);
-    }, 1000);
+        const showNotification = () => {
+            new Notification("Time is up!", {
+                body: "The countdown has finished.",
+                icon: "path_to_notification_icon.png",
+            });
+        };
 
-    return () => clearInterval(interval);
-  } else if (canStart && countdown === 0) {
-    // Countdown has reached 0
-    setCanStart(false);
-    alert("Time is up!");
+        if (canStart && countdown > 0) {
+            const interval = setInterval(() => {
+                setCountdown((prevCountdown) => prevCountdown - 1);
+            }, 1000);
 
-    if ("Notification" in window) {
-      if (Notification.permission === "granted") {
-        // Show system-level notification
-        showNotification();
-      } else if (Notification.permission !== "denied") {
-        // Request permission to show notifications
-        Notification.requestPermission().then((permission) => {
-          if (permission === "granted") {
-            // Show system-level notification
-            showNotification();
-          }
-        });
-      }
-    }
-  }
-}, [canStart, countdown]);
+            return () => clearInterval(interval);
+        } else if (canStart && countdown === 0) {
+            // Countdown has reached 0
+            setCanStart(false);
 
-const showNotification = () => {
-  new Notification("Time is up!", {
-    body: "The countdown has finished.",
-    icon: "path_to_notification_icon.png",
-  });
-};
-
-
+            if ("Notification" in window) {
+                if (Notification.permission === "granted") {
+                    showNotification();
+                    setTimeout(() => {
+                        resetInputValues(); 
+                        alert("Time is up!");
+                    }, 1000);
+                } else if (Notification.permission !== "denied") {
+                    Notification.requestPermission().then((permission) => {
+                        if (permission === "granted") {
+                            showNotification();
+                            setTimeout(() => {
+                                resetInputValues(); 
+                                alert("Time is up!");
+                            }, 1000);
+                        }
+                    });
+                }
+            } else {
+                resetInputValues();
+                alert("Time is up!");
+            }
+        }
+    }, [canStart, countdown, resetInputValues]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -95,10 +100,7 @@ const showNotification = () => {
             ...prevState,
             [name]: parseInt(value, 10),
         }));
-    };
-
-
-    const totalSeconds = time.hours * 3600 + time.minutes * 60 + time.seconds;
+    }
 
     const formatTime = (totalSeconds) => {
         const hours = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
@@ -108,62 +110,63 @@ const showNotification = () => {
         return `${hours}:${minutes}:${seconds}`;
     };
 
-
-    const formattedTime = formatTime(totalSeconds);
-
-
     return (
         <div className='flex flex-col min-h-screen'>
             <div className='flex-grow'>
                 <div className='flex flex-col items-center justify-center h-screen bg-background1'>
-                    <h1 className="text-6xl font-semibold w-fit h-fit text-center text-white pb-1 group overflow-hidden bottom-5 relative">
+                    <h1 className="text-6xl font-semibold w-fit h-fit text-center text-white pb-5 group overflow-hidden bottom-5 relative">
                         Timer
                         <span className="group-hover:translate-y-20 inline-block transition-transform animate-pulse pt-5">⏰</span>
                     </h1>
                     <div className="bg-white rounded-lg shadow-lg p-8 min-h-[50%] min-w-[30%] flex align-middle flex-col justify-center bg-opacity-5 backdrop-filter backdrop-blur-lg backdrop-saturate-150 neumorphism2">
-                        <div className="flex items-center justify-center mb-8 text-white">
+                        <div className="flex items-center justify-center mb- text-white flex-col ">
+                            {!canStart && <h2 className='mb-10 text-2xl'>Choose your pomodoro time:</h2>}
 
                             <>
                                 {!canStart ? (
                                     <div>
-                                        <label>
-                                            H
+                                        <label className="flex items-center mb-2">
+                                            <span className="mr-2 text-xl">Hours</span>
                                             <input
                                                 type="number"
                                                 name="hours"
                                                 value={time.hours}
                                                 onChange={handleChange}
-                                                className='text-background1 text-center w-10 focus:outline-none'
+                                                className="w-20 text-center focus:outline-none ml-auto text-background1"
                                             />
                                         </label>
-                                        <label>
-                                            M
+                                        <label className="flex items-center mb-2">
+                                            <span className="mr-2 text-xl">Minutes</span>
                                             <input
                                                 type="number"
                                                 name="minutes"
                                                 value={time.minutes}
                                                 onChange={handleChange}
-                                                className='text-background1 text-center w-10 focus:outline-none'
+                                                className="w-20 text-center focus:outline-none ml-auto text-background1"
                                             />
                                         </label>
-                                        <label>
-                                            S
+                                        <label className="flex items-center mb-2">
+                                            <span className="mr-2 text-xl">Seconds</span>
                                             <input
                                                 type="number"
                                                 name="seconds"
                                                 value={time.seconds}
                                                 onChange={handleChange}
-                                                className='text-background1 text-center w-10 focus:outline-none'
+                                                className="w-20 text-center focus:outline-none ml-auto text-background1"
                                             />
-                                        </label> <br />
-                                        <button className='w-full mt-2 mx-auto text-center rounded-lg bg-gray-100 border p-2 shadow-md hover:shadow-lg focus:outline-none focus:ring focus:border-bermuda' onClick={handleStart}>Start</button>
-
-
+                                        </label>
+                                        <button
+                                            className="text-2xl w-full mt-10 text-center rounded-lg bg-gray-100 border p-2 shadow-md hover:shadow-lg focus:outline-none focus:ring focus:border-bermuda"
+                                            onClick={handleStart}
+                                        >
+                                            Start
+                                        </button>
                                     </div>
+
                                 ) : (
                                     <div>
                                         {/* Aquí puedes mostrar el conteo regresivo */}
-                                        <p>Countdown in progress: {formatTime(countdown)}</p>
+                                        <h3 className='text-2xl'>Countdown... {formatTime(countdown)}</h3>
                                     </div>
                                 )}
                             </>
@@ -173,14 +176,14 @@ const showNotification = () => {
                 </div>
             </div>
             <footer className='absolute bottom-0 w-full py-5 bg-white bg-opacity-10 backdrop-blur-lg b shadow-lg'>
-                <div className='container px-4 mx-auto'>
-                    <div className='flex flex-col items-center justify-between md:flex-row'>
+                <div className=' px-4 mx-auto container'> 
+                    <div className='flex flex-col items-center justify-center md:flex-row gap-80 '>
                         <div className='flex items-center justify-center mb-4 text-center text-white md:text-left md:mb-0'>
                             <span className='font-normal text-md'>
                                 developed with 💜 by codewithxavi{' '}  <span className='text-white'> &copy; {new Date().getFullYear()}</span>
                             </span>
                             &nbsp;
-
+ 
                         </div>
                         <div className='flex items-center space-x-4'>
                             <a
